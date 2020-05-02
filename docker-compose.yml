@@ -1,0 +1,15 @@
+version: '2.1'
+
+services:
+  db:
+    build:
+      context: .
+      dockerfile: db/.Dockerfile
+    ports:
+      - '5432:5432'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=postgres
+      - POSTGRES_DBNAME=mvt_mvp
+      - ALLOW_IP_RANGE=0.0.0.0/0
