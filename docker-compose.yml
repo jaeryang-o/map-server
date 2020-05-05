@@ -1,10 +1,12 @@
-version: '2.1'
+version: '3'
 
 services:
   db:
     build:
-      context: .
-      dockerfile: db/.Dockerfile
+      context: ./db
+      dockerfile: Dockerfile
+    volumes:
+      - ./db/data:/home/osmdata/gpkg
     ports:
       - '5432:5432'
     restart: always
