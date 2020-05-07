@@ -5,13 +5,22 @@ services:
     build:
       context: ./db
       dockerfile: Dockerfile
-    volumes:
-      - ./db/data:/home/osmdata/gpkg
     ports:
       - '5432:5432'
     restart: always
     environment:
       - POSTGRES_USER=postgres
       - POSTGRES_PASS=postgres
-      - POSTGRES_DBNAME=mvt_mvp
+      - POSTGRES_DBNAME=osmdata
       - ALLOW_IP_RANGE=0.0.0.0/0
+  import:
+    build:
+      context: ./import
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASS=postgres
+        - POSTGRES_DBNAME=osmdata
+        - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - ./import/pbf:/home/osmdata/pbf
