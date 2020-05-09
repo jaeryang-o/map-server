@@ -1,0 +1,13 @@
+version: '3.4'
+
+services:
+  import:
+    build:
+      network: host
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - POSTGRES_HOST=localhost
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASS=postgres
+        - POSTGRES_DBNAME=osmdata
