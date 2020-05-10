@@ -11,6 +11,8 @@ export password=${POSTGRES_PASS}
 export PGPASSWORD=${POSTGRES_PASS}
 export dbname=${POSTGRES_DBNAME}
 
+echo "postgis://$user:$password@$host:$port/$dbname"
+
 #echo "dropping tables"
 #psql -h $host -p $port -d osmdata -U $user --no-password <<-EOSQL
 #  DROP TABLE import.osm_linestring;
@@ -33,20 +35,33 @@ for i in "${data[@]}"; do
 	IFS=',' read pbf out <<< "${i}"
   echo "Filtering tags from $pbf"
 
-	for tag in "${tags[@]}"; do
-	  echo "Filtering $tag"
-	  osmium tags-filter ${pbf} nwr/${tag} --progress -o ${out}_${tag}.osm.pbf
-
-    echo "treating $i"
-    /home/osmdata/imposm import \
+  /home/osmdata/imposm import \
             -mapping "/home/osmdata/mapping.yml" \
             -cachedir "/home/osmdata/pbf/impcache" \
             -overwritecache \
+            -diffdir "/home/osmdata/pbf/impdiff" \
+            -diff \
             -srid 4326 \
-            -read ${out}_${tag}.osm.pbf \
+            -read ${pbf} \
             -write \
             -connection "postgis://$user:$password@$host:$port/$dbname"
-	done
+
+#	for tag in "${tags[@]}"; do
+#	  echo "Filtering $tag"
+#	  osmium tags-filter ${pbf} nwr/${tag} -o ${out}_${tag}.osm.pbf --progress --overwrite
+#
+#    echo "treating $i"
+#    /home/osmdata/imposm import \
+#            -mapping "/home/osmdata/mapping.yml" \
+#            -cachedir "/home/osmdata/pbf/impcache" \
+#            -overwritecache \
+#            -diffdir "/home/osmdata/pbf/impdiff" \
+#            -diff \
+#            -srid 4326 \
+#            -read ${out}_${tag}.osm.pbf \
+#            -write \
+#            -connection "postgis://$user:$password@$host:$port/$dbname"
+#	done
 done
 
 end=`date +%s`

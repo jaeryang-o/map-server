@@ -1,10 +1,5 @@
 FROM ubuntu:18.04
 
-ARG POSTGRES_HOST
-ARG POSTGRES_USER
-ARG POSTGRES_PASS
-ARG POSTGRES_DBNAME
-
 # getting postgres
 RUN apt-get update && apt-get -y install wget gnupg2
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
@@ -40,13 +35,13 @@ COPY ./mapping.yml /home/osmdata
 COPY data /home/osmdata/data
 RUN ["chmod", "+x", "/home/osmdata/scrips/import_osm.sh"]
 
-ADD https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh /home/osmdata
-RUN ["chmod", "+x", "/home/osmdata/wait-for-it.sh"]
-
 # download imposm3
 RUN wget https://github.com/omniscale/imposm3/releases/download/v0.10.0/imposm-0.10.0-linux-x86-64.tar.gz -P /home/osmdata &&\
     tar -xf /home/osmdata/imposm-0.10.0-linux-x86-64.tar.gz &&\
     cp -R /home/osmdata/imposm-0.10.0-linux-x86-64/* /home/osmdata/ &&\
     rm -R /home/osmdata/imposm-0.10.0-linux-x86-64
 
-RUN /home/osmdata/wait-for-it.sh ${POSTGRES_HOST}:5432 -t 10 -- /home/osmdata/scrips/import_osm.sh
+# Add VOLUMEs to allow backup of config, logs and databases
+VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "/home/osmdata/pbf"]
+
+ENTRYPOINT ["/home/osmdata/scrips/import_osm.sh"]

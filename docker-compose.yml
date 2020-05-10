@@ -2,14 +2,28 @@ version: '3.4'
 
 services:
   db:
-    build:
-      context: ./db
-      dockerfile: Dockerfile
+    container_name: postgis
+    image: kartoza/postgis
     ports:
       - '5432:5432'
     restart: always
     environment:
+      - PGDATA=/data/pgdata
       - POSTGRES_USER=postgres
       - POSTGRES_PASS=postgres
       - POSTGRES_DBNAME=osmdata
       - ALLOW_IP_RANGE=0.0.0.0/0
+    volumes:
+      - ./db/data:/data
+      - ./db/sql/postgis-vt-util.sql:/docker-entrypoint-initdb.d/postgis-vt-util.sql
+  dbadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: always
+    ports:
+      - 9000:80
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=postgres@postgres.org
+      - PGADMIN_DEFAULT_PASSWORD=postgres
+    volumes:
+    - ./db/admin:/var/lib/pgadmin

@@ -111,5 +111,5 @@ lib
 .next
 
 # db
-/import/data
+**/data
 /import/pbf
