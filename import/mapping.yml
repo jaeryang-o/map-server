@@ -1,1558 +1,567 @@
+areas:
+  area_tags: [buildings, landuse, leisure, natural, aeroway]
+  linear_tags: [highway, barrier]
+generalized_tables:
+  landusages_gen0:
+    source: landusages_gen1
+    sql_filter: ST_Area(geometry)>500000.000000
+    tolerance: 200.0
+  landusages_gen1:
+    source: landusages
+    sql_filter: ST_Area(geometry)>50000.000000
+    tolerance: 50.0
+  roads_gen0:
+    source: roads_gen1
+    tolerance: 200.0
+  roads_gen1:
+    source: roads
+    sql_filter:
+      type IN (
+      'motorway', 'motorway_link', 'trunk', 'trunk_link', 'primary',
+      'primary_link', 'secondary', 'secondary_link', 'tertiary', 'tertiary_link')
+      OR class IN('railway')
+    tolerance: 50.0
+  waterareas_gen0:
+    source: waterareas_gen1
+    sql_filter: ST_Area(geometry)>500000.000000
+    tolerance: 200.0
+  waterareas_gen1:
+    source: waterareas
+    sql_filter: ST_Area(geometry)>50000.000000
+    tolerance: 50.0
+  waterways_gen0:
+    source: waterways_gen1
+    tolerance: 200
+  waterways_gen1:
+    source: waterways
+    tolerance: 50.0
 tables:
-  point:
-    load_all: true
-    type: point
+  admin:
     columns:
-    - name: geometry
-      type: geometry
-    - key: name
-      name: name
-      type: string
-    - key: aerialway
-      name: aerialway
-      type: string
-    - key: occupancy
-      name: occupancy
-      type: string
-    - key: aerialway:capacity
-      name: aerialway:capacity
-      type: string
-    - key: aerialway:duration
-      name: aerialway:duration
-      type: string
-    - key: aerialway:detachable
-      name: aerialway:detachable
-      type: string
-    - key: aerialway:bubble
-      name: aerialway:bubble
-      type: string
-    - key: aerialway:heating
-      name: aerialway:heating
-      type: string
-    - key: aerialway:summer:access
-      name: aerialway:summer:access
-      type: string
-    - key: aeroway
-      name: aeroway
-      type: string
-    - key: airmark
-      name: airmark
-      type: string
-    - key: operator
-      name: operator
-      type: string
-    - key: amenity
-      name: amenity
-      type: string
-    - key: barrier
-      name: barrier
-      type: string
-    - key: maxwidth
-      name: maxwidth
-      type: string
-    - key: width
-      name: width
-      type: string
-    - key: maxheight
-      name: maxheight
-      type: string
-    - key: height
-      name: height
-      type: string
-    - key: wheelchair
-      name: wheelchair
-      type: string
-    - key: boundary
-      name: boundary
-      type: string
-    - key: admin_level
-      name: admin_level
-      type: string
-    - key: border_type
-      name: border_type
-      type: string
-    - key: start_date
-      name: start_date
-      type: string
-    - key: end_date
-      name: end_date
-      type: string
-    - key: fire_boundary
-      name: fire_boundary
-      type: string
-    - key: building
-      name: building
-      type: string
-    - key: entrance
-      name: entrance
-      type: string
-    - key: building:levels
-      name: building:levels
-      type: string
-    - key: building:architecture
-      name: building:architecture
-      type: string
-    - key: building:use
-      name: building:use
-      type: string
-    - key: addr
-      name: addr
-      type: string
-    - key: addr:housenumber
-      name: addr:housenumber
-      type: string
-    - key: addr:housename
-      name: addr:housename
-      type: string
-    - key: addr:flats
-      name: addr:flats
-      type: string
-    - key: addr:conscriptionnumber
-      name: addr:conscriptionnumber
-      type: string
-    - key: addr:street
-      name: addr:street
-      type: string
-    - key: addr:place
-      name: addr:place
-      type: string
-    - key: addr:postcode
-      name: addr:postcode
-      type: string
-    - key: addr:city
-      name: addr:city
-      type: string
-    - key: addr:country
-      name: addr:country
-      type: string
-    - key: addr:full
-      name: addr:full
-      type: string
-    - key: addr:hamlet
-      name: addr:hamlet
-      type: string
-    - key: addr:suburb
-      name: addr:suburb
-      type: string
-    - key: addr:subdistrict
-      name: addr:subdistrict
-      type: string
-    - key: addr:district
-      name: addr:district
-      type: string
-    - key: addr:province
-      name: addr:province
-      type: string
-    - key: addr:state
-      name: addr:state
-      type: string
-    - key: addr:interpolation
-      name: addr:interpolation
-      type: string
-    - key: addr:inclusion
-      name: addr:inclusion
-      type: string
-    - key: addr:door
-      name: addr:door
-      type: string
-    - key: addr:unit
-      name: addr:unit
-      type: string
-    - key: addr:floor
-      name: addr:floor
-      type: string
-    - key: addr:block
-      name: addr:block
-      type: string
-    - key: craft
-      name: craft
-      type: string
-    - key: opening_hours
-      name: opening_hours
-      type: string
-    - key: phone
-      name: phone
-      type: string
-    - key: website
-      name: website
-      type: string
-    - key: emergency
-      name: emergency
-      type: string
-    - key: geological
-      name: geological
-      type: string
-    - key: highway
-      name: highway
-      type: string
-    - key: sidewalk
-      name: sidewalk
-      type: string
-    - key: cycleway
-      name: cycleway
-      type: string
-    - key: busway
-      name: busway
-      type: string
-    - key: abutters
-      name: abutters
-      type: string
-    - key: bicycle_road
-      name: bicycle_road
-      type: string
-    - key: driving_side
-      name: driving_side
-      type: string
-    - key: ford
-      name: ford
-      type: string
-    - key: ice_road
-      name: ice_road
-      type: string
-    - key: incline
-      name: incline
-      type: string
-    - key: junction
-      name: junction
-      type: string
-    - key: lanes
-      name: lanes
-      type: string
-    - key: lit
-      name: lit
-      type: string
-    - key: motorroad
-      name: motorroad
-      type: string
-    - key: mountain_pass
-      name: mountain_pass
-      type: string
-    - key: mtb:scale
-      name: mtb:scale
-      type: string
-    - key: mtb:scale:uphill
-      name: mtb:scale:uphill
-      type: string
-    - key: mtb:scale:imba
-      name: mtb:scale:imba
-      type: string
-    - key: mtb:description
-      name: mtb:description
-      type: string
-    - key: overtaking
-      name: overtaking
-      type: string
-    - key: parking:condition
-      name: parking:condition
-      type: string
-    - key: parking:lane
-      name: parking:lane
-      type: string
-    - key: passing_places
-      name: passing_places
-      type: string
-    - key: sac_scale
-      name: sac_scale
-      type: string
-    - key: service
-      name: service
-      type: string
-    - key: surface
-      name: surface
-      type: string
-    - key: tactile_paving
-      name: tactile_paving
-      type: string
-    - key: tracktype
-      name: tracktype
-      type: string
-    - key: traffic_calming
-      name: traffic_calming
-      type: string
-    - key: trail_visibility
-      name: trail_visibility
-      type: string
-    - key: winter_road
-      name: winter_road
-      type: string
-    - key: access
-      name: access
-      type: string
-    - key: maxspeed
-      name: maxspeed
-      type: string
-    - key: maxweight
-      name: maxweight
-      type: string
-    - key: oneway
-      name: oneway
-      type: string
-    - key: historic
-      name: historic
-      type: string
-    - key: heritage
-      name: heritage
-      type: string
-    - key: landuse
-      name: landuse
-      type: string
-    - key: leisure
-      name: leisure
-      type: string
-    - key: man_made
-      name: man_made
-      type: string
-    - key: military
-      name: military
-      type: string
-    - key: natural
-      name: natural
-      type: string
-    - key: office
-      name: office
-      type: string
-    - key: brand
-      name: brand
-      type: string
-    - key: fax
-      name: fax
-      type: string
-    - key: club
-      name: club
-      type: string
-    - key: place
-      name: place
-      type: string
-    - key: population
-      name: population
-      type: string
-    - key: wikidata
-      name: wikidata
-      type: string
-    - key: wikipedia
-      name: wikipedia
-      type: string
-    - key: power
-      name: power
-      type: string
-    - key: public_transport
-      name: public_transport
-      type: string
-    - key: railway
-      name: railway
-      type: string
-    - key: bridge
-      name: bridge
-      type: string
-    - key: cutting
-      name: cutting
-      type: string
-    - key: electrified
-      name: electrified
-      type: string
-    - key: embankment
-      name: embankment
-      type: string
-    - key: frequency
-      name: frequency
-      type: string
-    - key: railway:track_ref
-      name: railway:track_ref
-      type: string
-    - key: tracks
-      name: tracks
-      type: string
-    - key: usage
-      name: usage
-      type: string
-    - key: voltage
-      name: voltage
-      type: string
-    - key: route
-      name: route
-      type: string
-    - key: shop
-      name: shop
-      type: string
-    - key: wholesale
-      name: wholesale
-      type: string
-    - key: level
-      name: level
-      type: string
-    - key: sport
-      name: sport
-      type: string
-    - key: telcom
-      name: telcom
-      type: string
-    - key: tourism
-      name: tourism
-      type: string
-    - key: fee
-      name: fee
-      type: string
-    - key: waterway
-      name: waterway
-      type: string
-    - key: intermittent
-      name: intermittent
-      type: string
-    - key: seasonal
-      name: seasonal
-      type: string
-    - key: destination
-      name: destination
-      type: string
-    - key: lock
-      name: lock
-      type: string
-    - key: mooring
-      name: mooring
-      type: string
-    - key: water
-      name: water
-      type: string
-    - key: int_name
-      name: int_name
-      type: string
-    - key: loc_name
-      name: loc_name
-      type: string
-    - key: nat_name
-      name: nat_name
-      type: string
-    - key: official_name
-      name: official_name
-      type: string
-    - key: old_name
-      name: old_name
-      type: string
-    - key: reg_name
-      name: reg_name
-      type: string
-    - key: short_name
-      name: short_name
-      type: string
-    - key: sorting_name
-      name: sorting_name
-      type: string
-    - key: ele
-      name: ele
-      type: string
-    - key: location
-      name: location
-      type: string
-    - key: agricultural
-      name: agricultural
-      type: string
-    - key: atv
-      name: atv
-      type: string
-    - key: bdouble
-      name: bdouble
-      type: string
-    - key: bicycle
-      name: bicycle
-      type: string
-    - key: boat
-      name: boat
-      type: string
-    - key: foot
-      name: foot
-      type: string
-    - key: forestry
-      name: forestry
-      type: string
-    - key: toll
-      name: toll
-      type: string
-    - key: capital
-      name: capital
-      type: string
-    - key: layer
-      name: layer
-      type: string
-    - key: telecom
-      name: telecom
-      type: string
-    - key: internet_access
-      name: internet_access
-      type: string
-    - key: wifi
-      name: wifi
-      type: string
-    - key: timestamp
-      name: timestamp
-      type: string
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - key: admin_level
+        name: admin_level
+        type: integer
     mapping:
-       building: [__any__]
-       highway: [__any__]
-       natural: [__any__]
-       addr: [__any__]
-       landuse: [__any__]
-       waterway: [__any__]
-       boundary: [__any__]
-       route: [__any__]
-       amenity: [__any__]
-       place: [__any__]
-       leisure: [__any__]
-       water: [__any__]
-       power: [__any__]
-       barrier: [__any__]
-       railway: [__any__]
-       man_made: [__any__]
-       shop: [__any__]
-       sport: [__any__]
-       tourism: [__any__]
-       public_transport: [__any__]
-       historic: [__any__]
-       emergency: [__any__]
-       office: [__any__]
-       aeroway: [__any__]
-       craft: [__any__]
-       military: [__any__]
-       aerialway: [__any__]
-       geological: [__any__]
-       telecom: [__any__]
-       internet_access: [__any__]
-       wifi: [__any__]
-       timestamp: [__any__]
-  linestring:
-    load_all: true
-    type: linestring
-    columns:
-    - name: geometry
-      type: geometry
-    - key: name
-      name: name
-      type: string
-    - key: aerialway
-      name: aerialway
-      type: string
-    - key: occupancy
-      name: occupancy
-      type: string
-    - key: aerialway:capacity
-      name: aerialway:capacity
-      type: string
-    - key: aerialway:duration
-      name: aerialway:duration
-      type: string
-    - key: aerialway:detachable
-      name: aerialway:detachable
-      type: string
-    - key: aerialway:bubble
-      name: aerialway:bubble
-      type: string
-    - key: aerialway:heating
-      name: aerialway:heating
-      type: string
-    - key: aerialway:summer:access
-      name: aerialway:summer:access
-      type: string
-    - key: aeroway
-      name: aeroway
-      type: string
-    - key: airmark
-      name: airmark
-      type: string
-    - key: operator
-      name: operator
-      type: string
-    - key: amenity
-      name: amenity
-      type: string
-    - key: barrier
-      name: barrier
-      type: string
-    - key: maxwidth
-      name: maxwidth
-      type: string
-    - key: width
-      name: width
-      type: string
-    - key: maxheight
-      name: maxheight
-      type: string
-    - key: height
-      name: height
-      type: string
-    - key: wheelchair
-      name: wheelchair
-      type: string
-    - key: boundary
-      name: boundary
-      type: string
-    - key: admin_level
-      name: admin_level
-      type: string
-    - key: border_type
-      name: border_type
-      type: string
-    - key: start_date
-      name: start_date
-      type: string
-    - key: end_date
-      name: end_date
-      type: string
-    - key: fire_boundary
-      name: fire_boundary
-      type: string
-    - key: building
-      name: building
-      type: string
-    - key: entrance
-      name: entrance
-      type: string
-    - key: building:levels
-      name: building:levels
-      type: string
-    - key: building:architecture
-      name: building:architecture
-      type: string
-    - key: building:use
-      name: building:use
-      type: string
-    - key: addr
-      name: addr
-      type: string
-    - key: addr:housenumber
-      name: addr:housenumber
-      type: string
-    - key: addr:housename
-      name: addr:housename
-      type: string
-    - key: addr:flats
-      name: addr:flats
-      type: string
-    - key: addr:conscriptionnumber
-      name: addr:conscriptionnumber
-      type: string
-    - key: addr:street
-      name: addr:street
-      type: string
-    - key: addr:place
-      name: addr:place
-      type: string
-    - key: addr:postcode
-      name: addr:postcode
-      type: string
-    - key: addr:city
-      name: addr:city
-      type: string
-    - key: addr:country
-      name: addr:country
-      type: string
-    - key: addr:full
-      name: addr:full
-      type: string
-    - key: addr:hamlet
-      name: addr:hamlet
-      type: string
-    - key: addr:suburb
-      name: addr:suburb
-      type: string
-    - key: addr:subdistrict
-      name: addr:subdistrict
-      type: string
-    - key: addr:district
-      name: addr:district
-      type: string
-    - key: addr:province
-      name: addr:province
-      type: string
-    - key: addr:state
-      name: addr:state
-      type: string
-    - key: addr:interpolation
-      name: addr:interpolation
-      type: string
-    - key: addr:inclusion
-      name: addr:inclusion
-      type: string
-    - key: addr:door
-      name: addr:door
-      type: string
-    - key: addr:unit
-      name: addr:unit
-      type: string
-    - key: addr:floor
-      name: addr:floor
-      type: string
-    - key: addr:block
-      name: addr:block
-      type: string
-    - key: craft
-      name: craft
-      type: string
-    - key: opening_hours
-      name: opening_hours
-      type: string
-    - key: phone
-      name: phone
-      type: string
-    - key: website
-      name: website
-      type: string
-    - key: emergency
-      name: emergency
-      type: string
-    - key: geological
-      name: geological
-      type: string
-    - key: highway
-      name: highway
-      type: string
-    - key: sidewalk
-      name: sidewalk
-      type: string
-    - key: cycleway
-      name: cycleway
-      type: string
-    - key: busway
-      name: busway
-      type: string
-    - key: abutters
-      name: abutters
-      type: string
-    - key: bicycle_road
-      name: bicycle_road
-      type: string
-    - key: driving_side
-      name: driving_side
-      type: string
-    - key: ford
-      name: ford
-      type: string
-    - key: ice_road
-      name: ice_road
-      type: string
-    - key: incline
-      name: incline
-      type: string
-    - key: junction
-      name: junction
-      type: string
-    - key: lanes
-      name: lanes
-      type: string
-    - key: lit
-      name: lit
-      type: string
-    - key: motorroad
-      name: motorroad
-      type: string
-    - key: mountain_pass
-      name: mountain_pass
-      type: string
-    - key: mtb:scale
-      name: mtb:scale
-      type: string
-    - key: mtb:scale:uphill
-      name: mtb:scale:uphill
-      type: string
-    - key: mtb:scale:imba
-      name: mtb:scale:imba
-      type: string
-    - key: mtb:description
-      name: mtb:description
-      type: string
-    - key: overtaking
-      name: overtaking
-      type: string
-    - key: parking:condition
-      name: parking:condition
-      type: string
-    - key: parking:lane
-      name: parking:lane
-      type: string
-    - key: passing_places
-      name: passing_places
-      type: string
-    - key: sac_scale
-      name: sac_scale
-      type: string
-    - key: service
-      name: service
-      type: string
-    - key: surface
-      name: surface
-      type: string
-    - key: tactile_paving
-      name: tactile_paving
-      type: string
-    - key: tracktype
-      name: tracktype
-      type: string
-    - key: traffic_calming
-      name: traffic_calming
-      type: string
-    - key: trail_visibility
-      name: trail_visibility
-      type: string
-    - key: winter_road
-      name: winter_road
-      type: string
-    - key: access
-      name: access
-      type: string
-    - key: maxspeed
-      name: maxspeed
-      type: string
-    - key: maxweight
-      name: maxweight
-      type: string
-    - key: oneway
-      name: oneway
-      type: string
-    - key: historic
-      name: historic
-      type: string
-    - key: heritage
-      name: heritage
-      type: string
-    - key: landuse
-      name: landuse
-      type: string
-    - key: leisure
-      name: leisure
-      type: string
-    - key: man_made
-      name: man_made
-      type: string
-    - key: military
-      name: military
-      type: string
-    - key: natural
-      name: natural
-      type: string
-    - key: office
-      name: office
-      type: string
-    - key: brand
-      name: brand
-      type: string
-    - key: fax
-      name: fax
-      type: string
-    - key: club
-      name: club
-      type: string
-    - key: place
-      name: place
-      type: string
-    - key: population
-      name: population
-      type: string
-    - key: wikidata
-      name: wikidata
-      type: string
-    - key: wikipedia
-      name: wikipedia
-      type: string
-    - key: power
-      name: power
-      type: string
-    - key: public_transport
-      name: public_transport
-      type: string
-    - key: railway
-      name: railway
-      type: string
-    - key: bridge
-      name: bridge
-      type: string
-    - key: cutting
-      name: cutting
-      type: string
-    - key: electrified
-      name: electrified
-      type: string
-    - key: embankment
-      name: embankment
-      type: string
-    - key: frequency
-      name: frequency
-      type: string
-    - key: railway:track_ref
-      name: railway:track_ref
-      type: string
-    - key: tracks
-      name: tracks
-      type: string
-    - key: usage
-      name: usage
-      type: string
-    - key: voltage
-      name: voltage
-      type: string
-    - key: route
-      name: route
-      type: string
-    - key: shop
-      name: shop
-      type: string
-    - key: wholesale
-      name: wholesale
-      type: string
-    - key: level
-      name: level
-      type: string
-    - key: sport
-      name: sport
-      type: string
-    - key: telcom
-      name: telcom
-      type: string
-    - key: tourism
-      name: tourism
-      type: string
-    - key: fee
-      name: fee
-      type: string
-    - key: waterway
-      name: waterway
-      type: string
-    - key: intermittent
-      name: intermittent
-      type: string
-    - key: seasonal
-      name: seasonal
-      type: string
-    - key: destination
-      name: destination
-      type: string
-    - key: lock
-      name: lock
-      type: string
-    - key: mooring
-      name: mooring
-      type: string
-    - key: water
-      name: water
-      type: string
-    - key: int_name
-      name: int_name
-      type: string
-    - key: loc_name
-      name: loc_name
-      type: string
-    - key: nat_name
-      name: nat_name
-      type: string
-    - key: official_name
-      name: official_name
-      type: string
-    - key: old_name
-      name: old_name
-      type: string
-    - key: reg_name
-      name: reg_name
-      type: string
-    - key: short_name
-      name: short_name
-      type: string
-    - key: sorting_name
-      name: sorting_name
-      type: string
-    - key: ele
-      name: ele
-      type: string
-    - key: location
-      name: location
-      type: string
-    - key: agricultural
-      name: agricultural
-      type: string
-    - key: atv
-      name: atv
-      type: string
-    - key: bdouble
-      name: bdouble
-      type: string
-    - key: bicycle
-      name: bicycle
-      type: string
-    - key: boat
-      name: boat
-      type: string
-    - key: foot
-      name: foot
-      type: string
-    - key: forestry
-      name: forestry
-      type: string
-    - key: toll
-      name: toll
-      type: string
-    - key: capital
-      name: capital
-      type: string
-    - key: layer
-      name: layer
-      type: string
-    - key: telecom
-      name: telecom
-      type: string
-    - key: internet_access
-      name: internet_access
-      type: string
-    - key: wifi
-      name: wifi
-      type: string
-    - key: timestamp
-      name: timestamp
-      type: string
-    mapping:
-       building: [__any__]
-       highway: [__any__]
-       natural: [__any__]
-       addr: [__any__]
-       landuse: [__any__]
-       waterway: [__any__]
-       boundary: [__any__]
-       route: [__any__]
-       amenity: [__any__]
-       place: [__any__]
-       leisure: [__any__]
-       water: [__any__]
-       power: [__any__]
-       barrier: [__any__]
-       railway: [__any__]
-       man_made: [__any__]
-       shop: [__any__]
-       sport: [__any__]
-       tourism: [__any__]
-       public_transport: [__any__]
-       historic: [__any__]
-       emergency: [__any__]
-       office: [__any__]
-       aeroway: [__any__]
-       craft: [__any__]
-       military: [__any__]
-       aerialway: [__any__]
-       geological: [__any__]
-       telecom: [__any__]
-       internet_access: [__any__]
-       wifi: [__any__]
-       timestamp: [__any__]
-  polygon:
-    load_all: true
+      boundary:
+        - administrative
     type: polygon
+  aeroways:
     columns:
-    - name: geometry
-      type: geometry
-    - key: name
-      name: name
-      type: string
-    - key: aerialway
-      name: aerialway
-      type: string
-    - key: occupancy
-      name: occupancy
-      type: string
-    - key: aerialway:capacity
-      name: aerialway:capacity
-      type: string
-    - key: aerialway:duration
-      name: aerialway:duration
-      type: string
-    - key: aerialway:detachable
-      name: aerialway:detachable
-      type: string
-    - key: aerialway:bubble
-      name: aerialway:bubble
-      type: string
-    - key: aerialway:heating
-      name: aerialway:heating
-      type: string
-    - key: aerialway:summer:access
-      name: aerialway:summer:access
-      type: string
-    - key: aeroway
-      name: aeroway
-      type: string
-    - key: airmark
-      name: airmark
-      type: string
-    - key: operator
-      name: operator
-      type: string
-    - key: amenity
-      name: amenity
-      type: string
-    - key: barrier
-      name: barrier
-      type: string
-    - key: maxwidth
-      name: maxwidth
-      type: string
-    - key: width
-      name: width
-      type: string
-    - key: maxheight
-      name: maxheight
-      type: string
-    - key: height
-      name: height
-      type: string
-    - key: wheelchair
-      name: wheelchair
-      type: string
-    - key: boundary
-      name: boundary
-      type: string
-    - key: admin_level
-      name: admin_level
-      type: string
-    - key: border_type
-      name: border_type
-      type: string
-    - key: start_date
-      name: start_date
-      type: string
-    - key: end_date
-      name: end_date
-      type: string
-    - key: fire_boundary
-      name: fire_boundary
-      type: string
-    - key: building
-      name: building
-      type: string
-    - key: entrance
-      name: entrance
-      type: string
-    - key: building:levels
-      name: building:levels
-      type: string
-    - key: building:architecture
-      name: building:architecture
-      type: string
-    - key: building:use
-      name: building:use
-      type: string
-    - key: addr
-      name: addr
-      type: string
-    - key: addr:housenumber
-      name: addr:housenumber
-      type: string
-    - key: addr:housename
-      name: addr:housename
-      type: string
-    - key: addr:flats
-      name: addr:flats
-      type: string
-    - key: addr:conscriptionnumber
-      name: addr:conscriptionnumber
-      type: string
-    - key: addr:street
-      name: addr:street
-      type: string
-    - key: addr:place
-      name: addr:place
-      type: string
-    - key: addr:postcode
-      name: addr:postcode
-      type: string
-    - key: addr:city
-      name: addr:city
-      type: string
-    - key: addr:country
-      name: addr:country
-      type: string
-    - key: addr:full
-      name: addr:full
-      type: string
-    - key: addr:hamlet
-      name: addr:hamlet
-      type: string
-    - key: addr:suburb
-      name: addr:suburb
-      type: string
-    - key: addr:subdistrict
-      name: addr:subdistrict
-      type: string
-    - key: addr:district
-      name: addr:district
-      type: string
-    - key: addr:province
-      name: addr:province
-      type: string
-    - key: addr:state
-      name: addr:state
-      type: string
-    - key: addr:interpolation
-      name: addr:interpolation
-      type: string
-    - key: addr:inclusion
-      name: addr:inclusion
-      type: string
-    - key: addr:door
-      name: addr:door
-      type: string
-    - key: addr:unit
-      name: addr:unit
-      type: string
-    - key: addr:floor
-      name: addr:floor
-      type: string
-    - key: addr:block
-      name: addr:block
-      type: string
-    - key: craft
-      name: craft
-      type: string
-    - key: opening_hours
-      name: opening_hours
-      type: string
-    - key: phone
-      name: phone
-      type: string
-    - key: website
-      name: website
-      type: string
-    - key: emergency
-      name: emergency
-      type: string
-    - key: geological
-      name: geological
-      type: string
-    - key: highway
-      name: highway
-      type: string
-    - key: sidewalk
-      name: sidewalk
-      type: string
-    - key: cycleway
-      name: cycleway
-      type: string
-    - key: busway
-      name: busway
-      type: string
-    - key: abutters
-      name: abutters
-      type: string
-    - key: bicycle_road
-      name: bicycle_road
-      type: string
-    - key: driving_side
-      name: driving_side
-      type: string
-    - key: ford
-      name: ford
-      type: string
-    - key: ice_road
-      name: ice_road
-      type: string
-    - key: incline
-      name: incline
-      type: string
-    - key: junction
-      name: junction
-      type: string
-    - key: lanes
-      name: lanes
-      type: string
-    - key: lit
-      name: lit
-      type: string
-    - key: motorroad
-      name: motorroad
-      type: string
-    - key: mountain_pass
-      name: mountain_pass
-      type: string
-    - key: mtb:scale
-      name: mtb:scale
-      type: string
-    - key: mtb:scale:uphill
-      name: mtb:scale:uphill
-      type: string
-    - key: mtb:scale:imba
-      name: mtb:scale:imba
-      type: string
-    - key: mtb:description
-      name: mtb:description
-      type: string
-    - key: overtaking
-      name: overtaking
-      type: string
-    - key: parking:condition
-      name: parking:condition
-      type: string
-    - key: parking:lane
-      name: parking:lane
-      type: string
-    - key: passing_places
-      name: passing_places
-      type: string
-    - key: sac_scale
-      name: sac_scale
-      type: string
-    - key: service
-      name: service
-      type: string
-    - key: surface
-      name: surface
-      type: string
-    - key: tactile_paving
-      name: tactile_paving
-      type: string
-    - key: tracktype
-      name: tracktype
-      type: string
-    - key: traffic_calming
-      name: traffic_calming
-      type: string
-    - key: trail_visibility
-      name: trail_visibility
-      type: string
-    - key: winter_road
-      name: winter_road
-      type: string
-    - key: access
-      name: access
-      type: string
-    - key: maxspeed
-      name: maxspeed
-      type: string
-    - key: maxweight
-      name: maxweight
-      type: string
-    - key: oneway
-      name: oneway
-      type: string
-    - key: historic
-      name: historic
-      type: string
-    - key: heritage
-      name: heritage
-      type: string
-    - key: landuse
-      name: landuse
-      type: string
-    - key: leisure
-      name: leisure
-      type: string
-    - key: man_made
-      name: man_made
-      type: string
-    - key: military
-      name: military
-      type: string
-    - key: natural
-      name: natural
-      type: string
-    - key: office
-      name: office
-      type: string
-    - key: brand
-      name: brand
-      type: string
-    - key: fax
-      name: fax
-      type: string
-    - key: club
-      name: club
-      type: string
-    - key: place
-      name: place
-      type: string
-    - key: population
-      name: population
-      type: string
-    - key: wikidata
-      name: wikidata
-      type: string
-    - key: wikipedia
-      name: wikipedia
-      type: string
-    - key: power
-      name: power
-      type: string
-    - key: public_transport
-      name: public_transport
-      type: string
-    - key: railway
-      name: railway
-      type: string
-    - key: bridge
-      name: bridge
-      type: string
-    - key: cutting
-      name: cutting
-      type: string
-    - key: electrified
-      name: electrified
-      type: string
-    - key: embankment
-      name: embankment
-      type: string
-    - key: frequency
-      name: frequency
-      type: string
-    - key: railway:track_ref
-      name: railway:track_ref
-      type: string
-    - key: tracks
-      name: tracks
-      type: string
-    - key: usage
-      name: usage
-      type: string
-    - key: voltage
-      name: voltage
-      type: string
-    - key: route
-      name: route
-      type: string
-    - key: shop
-      name: shop
-      type: string
-    - key: wholesale
-      name: wholesale
-      type: string
-    - key: level
-      name: level
-      type: string
-    - key: sport
-      name: sport
-      type: string
-    - key: telcom
-      name: telcom
-      type: string
-    - key: tourism
-      name: tourism
-      type: string
-    - key: fee
-      name: fee
-      type: string
-    - key: waterway
-      name: waterway
-      type: string
-    - key: intermittent
-      name: intermittent
-      type: string
-    - key: seasonal
-      name: seasonal
-      type: string
-    - key: destination
-      name: destination
-      type: string
-    - key: lock
-      name: lock
-      type: string
-    - key: mooring
-      name: mooring
-      type: string
-    - key: water
-      name: water
-      type: string
-    - key: int_name
-      name: int_name
-      type: string
-    - key: loc_name
-      name: loc_name
-      type: string
-    - key: nat_name
-      name: nat_name
-      type: string
-    - key: official_name
-      name: official_name
-      type: string
-    - key: old_name
-      name: old_name
-      type: string
-    - key: reg_name
-      name: reg_name
-      type: string
-    - key: short_name
-      name: short_name
-      type: string
-    - key: sorting_name
-      name: sorting_name
-      type: string
-    - key: ele
-      name: ele
-      type: string
-    - key: location
-      name: location
-      type: string
-    - key: agricultural
-      name: agricultural
-      type: string
-    - key: atv
-      name: atv
-      type: string
-    - key: bdouble
-      name: bdouble
-      type: string
-    - key: bicycle
-      name: bicycle
-      type: string
-    - key: boat
-      name: boat
-      type: string
-    - key: foot
-      name: foot
-      type: string
-    - key: forestry
-      name: forestry
-      type: string
-    - key: toll
-      name: toll
-      type: string
-    - key: capital
-      name: capital
-      type: string
-    - key: layer
-      name: layer
-      type: string
-    - key: telecom
-      name: telecom
-      type: string
-    - key: internet_access
-      name: internet_access
-      type: string
-    - key: wifi
-      name: wifi
-      type: string
-    - key: timestamp
-      name: timestamp
-      type: string
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
     mapping:
-       building: [__any__]
-       highway: [__any__]
-       natural: [__any__]
-       addr: [__any__]
-       landuse: [__any__]
-       waterway: [__any__]
-       boundary: [__any__]
-       route: [__any__]
-       amenity: [__any__]
-       place: [__any__]
-       leisure: [__any__]
-       water: [__any__]
-       power: [__any__]
-       barrier: [__any__]
-       railway: [__any__]
-       man_made: [__any__]
-       shop: [__any__]
-       sport: [__any__]
-       tourism: [__any__]
-       public_transport: [__any__]
-       historic: [__any__]
-       emergency: [__any__]
-       office: [__any__]
-       aeroway: [__any__]
-       craft: [__any__]
-       military: [__any__]
-       aerialway: [__any__]
-       geological: [__any__]
-       telecom: [__any__]
-       internet_access: [__any__]
-       wifi: [__any__]
-       timestamp: [__any__]
+      aeroway:
+        - runway
+        - taxiway
+    type: linestring
+  amenities:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      amenity:
+        - university
+        - school
+        - library
+        - fuel
+        - hospital
+        - fire_station
+        - police
+        - townhall
+    type: point
+  barrierpoints:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      barrier:
+        - block
+        - bollard
+        - cattle_grid
+        - chain
+        - cycle_barrier
+        - entrance
+        - horse_stile
+        - gate
+        - spikes
+        - lift_gate
+        - kissing_gate
+        - fence
+        - 'yes'
+        - wire_fence
+        - toll_booth
+        - stile
+    type: point
+  barrierways:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      barrier:
+        - city_wall
+        - fence
+        - hedge
+        - retaining_wall
+        - wall
+        - bollard
+        - gate
+        - spikes
+        - lift_gate
+        - kissing_gate
+        - embankment
+        - 'yes'
+        - wire_fence
+    type: linestring
+  buildings:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      building:
+        - __any__
+    type: polygon
+  housenumbers:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - key: addr:street
+        name: addr:street
+        type: string
+      - key: addr:postcode
+        name: addr:postcode
+        type: string
+      - key: addr:city
+        name: addr:city
+        type: string
+    mapping:
+      addr:housenumber:
+        - __any__
+    type: point
+  housenumbers_interpolated:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - key: addr:street
+        name: addr:street
+        type: string
+      - key: addr:postcode
+        name: addr:postcode
+        type: string
+      - key: addr:city
+        name: addr:city
+        type: string
+      - key: addr:inclusion
+        name: addr:inclusion
+        type: string
+    mapping:
+      addr:interpolation:
+        - __any__
+    type: linestring
+  landusages:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - name: area
+        type: webmerc_area
+      - args:
+          values:
+            - land
+            - island
+            - heath
+            - railway
+            - industrial
+            - commercial
+            - retail
+            - residential
+            - quarry
+            - zoo
+            - vineyard
+            - orchard
+            - scrub
+            - hospital
+            - place_of_worship
+            - theatre
+            - cinema
+            - nature_reserve
+            - parking
+            - fuel
+            - baracks
+            - library
+            - college
+            - school
+            - university
+            - golf_course
+            - allotments
+            - common
+            - pitch
+            - sports_centre
+            - garden
+            - recreation_ground
+            - village_green
+            - wetland
+            - grass
+            - meadow
+            - wood
+            - farmland
+            - farm
+            - farmyard
+            - cemetery
+            - forest
+            - park
+            - playground
+            - footway
+            - pedestrian
+        name: z_order
+        type: enumerate
+    mapping:
+      aeroway:
+        - runway
+        - taxiway
+      amenity:
+        - university
+        - school
+        - college
+        - library
+        - fuel
+        - parking
+        - cinema
+        - theatre
+        - place_of_worship
+        - hospital
+      barrier:
+        - hedge
+      highway:
+        - pedestrian
+        - footway
+      landuse:
+        - park
+        - forest
+        - residential
+        - retail
+        - commercial
+        - industrial
+        - railway
+        - cemetery
+        - grass
+        - farmyard
+        - farm
+        - farmland
+        - orchard
+        - vineyard
+        - wood
+        - meadow
+        - village_green
+        - recreation_ground
+        - allotments
+        - quarry
+      leisure:
+        - park
+        - garden
+        - playground
+        - golf_course
+        - sports_centre
+        - pitch
+        - stadium
+        - common
+        - nature_reserve
+      man_made:
+        - pier
+      military:
+        - barracks
+      natural:
+        - wood
+        - land
+        - scrub
+        - wetland
+        - heath
+      place:
+        - island
+      tourism:
+        - zoo
+    type: polygon
+  places:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - args:
+          values:
+            - locality
+            - suburb
+            - hamlet
+            - village
+            - town
+            - city
+            - county
+            - region
+            - state
+            - country
+        name: z_order
+        type: enumerate
+      - key: population
+        name: population
+        type: integer
+    mapping:
+      place:
+        - country
+        - state
+        - region
+        - county
+        - city
+        - town
+        - village
+        - hamlet
+        - suburb
+        - locality
+    type: point
+  roads:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - name: type
+        type: mapping_value
+      - key: name
+        name: name
+        type: string
+      - key: tunnel
+        name: tunnel
+        type: boolint
+      - key: bridge
+        name: bridge
+        type: boolint
+      - key: oneway
+        name: oneway
+        type: direction
+      - key: ref
+        name: ref
+        type: string
+      - key: layer
+        name: z_order
+        type: wayzorder
+      - key: access
+        name: access
+        type: string
+      - key: service
+        name: service
+        type: string
+      - name: class
+        type: mapping_key
+    filters:
+      reject:
+        area: ["yes"]
+    mappings:
+      railway:
+        mapping:
+          railway:
+            - rail
+            - tram
+            - light_rail
+            - subway
+            - narrow_gauge
+            - preserved
+            - funicular
+            - monorail
+            - disused
+      roads:
+        mapping:
+          highway:
+            - motorway
+            - motorway_link
+            - trunk
+            - trunk_link
+            - primary
+            - primary_link
+            - secondary
+            - secondary_link
+            - tertiary
+            - tertiary_link
+            - road
+            - path
+            - track
+            - service
+            - footway
+            - bridleway
+            - cycleway
+            - steps
+            - pedestrian
+            - living_street
+            - unclassified
+            - residential
+            - raceway
+          man_made:
+            - pier
+            - groyne
+    type: linestring
+  transport_areas:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      aeroway:
+        - aerodrome
+        - terminal
+        - helipad
+        - apron
+      railway:
+        - station
+        - platform
+    type: polygon
+  transport_points:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - key: ref
+        name: ref
+        type: string
+    mapping:
+      aeroway:
+        - aerodrome
+        - terminal
+        - helipad
+        - gate
+      highway:
+        - motorway_junction
+        - turning_circle
+        - bus_stop
+      railway:
+        - station
+        - halt
+        - tram_stop
+        - crossing
+        - level_crossing
+        - subway_entrance
+    type: point
+  waterareas:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+      - name: area
+        type: webmerc_area
+    mapping:
+      amenity:
+        - swimming_pool
+      landuse:
+        - basin
+        - reservoir
+      leisure:
+        - swimming_pool
+      natural:
+        - water
+      waterway:
+        - riverbank
+    type: polygon
+  waterways:
+    columns:
+      - name: osm_id
+        type: id
+      - name: geometry
+        type: geometry
+      - key: name
+        name: name
+        type: string
+      - name: type
+        type: mapping_value
+    mapping:
+      barrier:
+        - ditch
+      waterway:
+        - stream
+        - river
+        - canal
+        - drain
+        - ditch
+    type: linestring

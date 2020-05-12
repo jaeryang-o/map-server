@@ -28,12 +28,12 @@ RUN DEBIAN_FRONTEND=noninteractive apt-get install -y \
   vnstat gdal-bin
 
 WORKDIR /home/osmdata
-RUN mkdir /home/osmdata/scrips
+RUN mkdir /home/osmdata/scripts
 RUN mkdir /home/osmdata/pbf
-COPY scripts/import_osm.sh /home/osmdata/scrips
+COPY scripts /home/osmdata/scripts
+COPY sql /home/osmdata/sql
 COPY ./mapping.yml /home/osmdata
 COPY data /home/osmdata/data
-RUN ["chmod", "+x", "/home/osmdata/scrips/import_osm.sh"]
 
 # download imposm3
 RUN wget https://github.com/omniscale/imposm3/releases/download/v0.10.0/imposm-0.10.0-linux-x86-64.tar.gz -P /home/osmdata &&\
@@ -44,4 +44,4 @@ RUN wget https://github.com/omniscale/imposm3/releases/download/v0.10.0/imposm-0
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME  ["/etc/postgresql", "/var/log/postgresql", "/var/lib/postgresql", "/home/osmdata/pbf"]
 
-ENTRYPOINT ["/home/osmdata/scrips/import_osm.sh"]
+ENTRYPOINT ["/home/osmdata/scripts/entry.sh"]

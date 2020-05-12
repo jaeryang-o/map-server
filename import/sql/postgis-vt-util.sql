@@ -686,3 +686,29 @@ select
 $func$;
 
 
+/**
+
+https://sparkgeo.com/blog/vector-tile-server-using-postgis/
+
+ */
+
+create or replace function Buildings (x integer, y integer, zoom integer)
+    returns bytea
+    language sql immutable as
+$func$
+select ST_AsMVT(q, 'buildings', 4096, 'geom')
+from (
+         select
+             id, name, type,
+             ST_AsMVTGeom(
+                     osm_buildings.geometry,
+                     TileBBox(zoom, x, y),
+                     4096,
+                     256,
+                     false
+                 ) geom
+         from osm_buildings
+         where osm_buildings.geometry && TileBBox(zoom, x, y)
+           and ST_Intersects(geometry, TileBBox(zoom, x, y))
+     ) q;
+$func$;

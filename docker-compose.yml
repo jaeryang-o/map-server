@@ -15,7 +15,6 @@ services:
       - ALLOW_IP_RANGE=0.0.0.0/0
     volumes:
       - ./db/data:/data
-      - ./db/sql/postgis-vt-util.sql:/docker-entrypoint-initdb.d/postgis-vt-util.sql
   dbadmin:
     container_name: pgadmin
     image: dpage/pgadmin4
