@@ -26,3 +26,18 @@ services:
       - PGADMIN_DEFAULT_PASSWORD=postgres
     volumes:
     - ./db/admin:/var/lib/pgadmin
+  server:
+    container_name: express
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    ports:
+      - '8080:8080'
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASS=postgres
+      - POSTGRES_HOST=db
+      - POSTGRES_DBNAME=osmdata
+    volumes:
+      - ./server:/app
