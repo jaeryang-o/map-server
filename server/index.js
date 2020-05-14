@@ -1,4 +1,5 @@
 const express = require('express');
+const morgan = require('morgan');
 const pg = require('pg');
 
 const PORT = 8080;
@@ -8,6 +9,9 @@ const POSTGRES_HOST = process.env.POSTGRES_HOST || 'localhost';
 const POSTGRES_DBNAME = process.env.POSTGRES_DBNAME || 'osmdata';
 
 const app = express();
+
+app.use(morgan('tiny'));
+
 const router = express.Router();
 
 router.get(
