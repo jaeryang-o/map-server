@@ -712,3 +712,30 @@ from (
            and ST_Intersects(geometry, TileBBox(zoom, x, y))
      ) q;
 $func$;
+
+/**
+
+electric vehicle charging station
+
+ */
+
+create or replace function ElectricVehicleChargingStation (x integer, y integer, zoom integer)
+    returns bytea
+    language sql immutable as
+$func$
+select ST_AsMVT(q, 'electric_vehicle_charging_station', 4096, 'geom')
+from (
+         select
+             id, name,
+             ST_AsMVTGeom(
+                     electric_vehicle_charging_station.geometry,
+                     TileBBox(zoom, x, y),
+                     4096,
+                     256,
+                     false
+                 ) geom
+         from electric_vehicle_charging_station
+         where electric_vehicle_charging_station.geometry && TileBBox(zoom, x, y)
+           and ST_Intersects(electric_vehicle_charging_station.geometry, TileBBox(zoom, x, y))
+     ) q;
+$func$;

@@ -1,7 +1,10 @@
 import React, {
   useState
 } from 'react';
-import ReactMapGL, {Source, Layer} from 'react-map-gl';
+import ReactMapGL, {
+  Source,
+  Layer
+} from 'react-map-gl';
 import './main.css';
 
 const TILE_SERVER_HOST = process.env.TILE_SERVER_HOST || 'localhost';
@@ -30,14 +33,26 @@ export default () => {
         <Source
           id="osm-building"
           type="vector"
-          tiles={['http://localhost:8080/tile/{z}/{x}/{y}.pbf']}>
+          tiles={['http://localhost:8080/tile/building/{z}/{x}/{y}.pbf']}>
           <Layer
             id="osm-building"
             source-layer="buildings"
             type="fill"
             paint={{
               'fill-color': '#007cbf'
-            }} />
+            }}/>
+        </Source>
+        <Source
+          id="electric-vehicle"
+          type="vector"
+          tiles={['http://localhost:8080/tile/electric-vehicle/{z}/{x}/{y}.pbf']}>
+          <Layer
+            id="electric-vehicle"
+            source-layer="electric_vehicle_charging_station"
+            type="circle"
+            paint={{
+              'circle-color': '#ec1652'
+            }}/>
         </Source>
       </ReactMapGL>
     </div>

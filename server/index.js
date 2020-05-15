@@ -15,10 +15,10 @@ app.use(morgan('tiny'));
 const router = express.Router();
 
 router.get(
-  '/tile/:z/:x/:y.:ext',
+  '/tile/:service/:z/:x/:y.:ext',
   asyncWrapper(async (request, response, next) => {
     try {
-      const {z, x, y, ext} = request.params;
+      const {z, x, y, service, ext} = request.params;
       const client = new pg.Client({
         user: POSTGRES_USER,
         host: POSTGRES_HOST,
@@ -28,9 +28,17 @@ router.get(
       });
       client.connect();
 
-      const result = await client.query(`SELECT buildings(${x},${y},${z});`);
+      let table;
+
+      if (service === 'building') {
+        table = 'buildings';
+      } else if (service === 'electric-vehicle') {
+        table = 'electricvehiclechargingstation';
+      }
+
+      const result = await client.query(`SELECT ${table}(${x},${y},${z});`);
       await client.end();
-      const buffer = Buffer.from(result.rows[0].buildings, 'binary');
+      const buffer = Buffer.from(result.rows[0][table], 'binary');
 
       response.writeHead(200, {
         'Content-Type': 'application/protobuf',
