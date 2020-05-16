@@ -31,9 +31,9 @@ export default () => {
         onViewportChange={nextViewport => setViewport(nextViewport)}
       >
         <Source
-          id="osm-building"
+          id="gis-study-source"
           type="vector"
-          tiles={['http://localhost:8080/tile/building/{z}/{x}/{y}.pbf']}>
+          tiles={['http://localhost:8080/tile/{z}/{x}/{y}.pbf']}>
           <Layer
             id="osm-building"
             source-layer="buildings"
@@ -41,11 +41,6 @@ export default () => {
             paint={{
               'fill-color': '#007cbf'
             }}/>
-        </Source>
-        <Source
-          id="electric-vehicle"
-          type="vector"
-          tiles={['http://localhost:8080/tile/electric-vehicle/{z}/{x}/{y}.pbf']}>
           <Layer
             id="electric-vehicle"
             source-layer="electric_vehicle_charging_station"

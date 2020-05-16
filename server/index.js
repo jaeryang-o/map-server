@@ -15,7 +15,7 @@ app.use(morgan('tiny'));
 const router = express.Router();
 
 router.get(
-  '/tile/:service/:z/:x/:y.:ext',
+  '/tile/:z/:x/:y.:ext',
   asyncWrapper(async (request, response, next) => {
     try {
       const {z, x, y, service, ext} = request.params;
@@ -28,23 +28,23 @@ router.get(
       });
       client.connect();
 
-      let table;
+      let result;
+      const buffers = [];
+      const tables = ['buildings', 'electricvehiclechargingstation'];
 
-      if (service === 'building') {
-        table = 'buildings';
-      } else if (service === 'electric-vehicle') {
-        table = 'electricvehiclechargingstation';
+      for (let i = 0; i < tables.length; i += 1) {
+        const table = tables[i];
+        result = await client.query(`SELECT ${table}(${x},${y},${z});`);
+        buffers.push(Buffer.from(result.rows[0][table], 'binary'));
       }
 
-      const result = await client.query(`SELECT ${table}(${x},${y},${z});`);
       await client.end();
-      const buffer = Buffer.from(result.rows[0][table], 'binary');
 
       response.writeHead(200, {
         'Content-Type': 'application/protobuf',
         'Access-Control-Allow-Origin': '*',
       });
-      response.write(buffer, 'binary');
+      response.write(Buffer.concat(buffers), 'binary');
       response.end(null, 'binary');
     } catch (e) {
       console.error(e);
