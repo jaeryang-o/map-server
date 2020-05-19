@@ -18,3 +18,10 @@ docker-compose up
 ```sh
 docker-compose down
 ```
+
+## Import
+
+```sh
+cd import
+docker-compose up
+```
