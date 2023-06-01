@@ -41,13 +41,13 @@ export default () => {
             paint={{
               'fill-color': '#007cbf'
             }}/>
-          <Layer
+          {/* <Layer
             id="electric-vehicle"
             source-layer="electric_vehicle_charging_station"
             type="circle"
             paint={{
               'circle-color': '#ec1652'
-            }}/>
+            }}/> */}
         </Source>
       </ReactMapGL>
     </div>

@@ -12,61 +12,50 @@ const app = express();
 
 app.use(morgan('tiny'));
 
-const router = express.Router();
+app.get('/tile/:z/:x/:y.:ext', async (request, response) => {
+  try {
+    // const { z, x, y, ext } = request.params;
+    // const client = new pg.Client({
+    //   user: POSTGRES_USER,
+    //   host: POSTGRES_HOST,
+    //   password: POSTGRES_PASS,
+    //   database: POSTGRES_DBNAME,
+    //   port: 5432,
+    // });
+    // client.connect();
 
-router.get(
-  '/tile/:z/:x/:y.:ext',
-  asyncWrapper(async (request, response, next) => {
-    try {
-      const {z, x, y, service, ext} = request.params;
-      const client = new pg.Client({
-        user: POSTGRES_USER,
-        host: POSTGRES_HOST,
-        password: POSTGRES_PASS,
-        database: POSTGRES_DBNAME,
-        port: 5432,
-      });
-      client.connect();
+    // let result;
+    // const buffers = [];
+    // const tables = ['buildings', 'electricvehiclechargingstation'];
 
-      let result;
-      const buffers = [];
-      const tables = ['buildings', 'electricvehiclechargingstation'];
+    // for (let i = 1; i < tables.length; i += 1) {
+    //   const table = tables[i];
+    //   result = await client.query(`SELECT ${table}(${x},${y},${z});`);
+    //   buffers.push(Buffer.from(result.rows[0][table], 'binary'));
+    // }
 
-      for (let i = 0; i < tables.length; i += 1) {
-        const table = tables[i];
-        result = await client.query(`SELECT ${table}(${x},${y},${z});`);
-        buffers.push(Buffer.from(result.rows[0][table], 'binary'));
-      }
+    // await client.end();
 
-      await client.end();
+    // response.writeHead(200, {
+    //   'Content-Type': 'application/protobuf',
+    //   'Access-Control-Allow-Origin': '*',
+    // });
+    // response.write(Buffer.concat(buffers), 'binary');
+    // response.end(null, 'binary');
+    
+    console.log("express try!");
+    
+  } catch (e) {
+    console.error(e);
+    response.status(500);
+    response.send(e);
+    
+    console.log("express catch!");
+    
+  }
+});
 
-      response.writeHead(200, {
-        'Content-Type': 'application/protobuf',
-        'Access-Control-Allow-Origin': '*',
-      });
-      response.write(Buffer.concat(buffers), 'binary');
-      response.end(null, 'binary');
-    } catch (e) {
-      console.error(e);
-      response.status(500);
-      response.send(e);
-    }
-  })
-);
+app.listen(PORT, () => {
+  console.log(`Example app listening at http://localhost:${PORT}`);
+});
 
-app.use(router);
-
-function asyncWrapper(asyncFn) {
-  return (async (req, res, next) => {
-    try {
-      return await asyncFn(req, res, next);
-    } catch (error) {
-      return next(error);
-    }
-  });
-}
-
-app.listen(
-  PORT,
-  () => console.log(`Example app listening at http://localhost:${PORT}`)
-);
